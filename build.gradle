@@ -1,0 +1,46 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.1'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.crawlerExam'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// selenium
+	implementation 'org.seleniumhq.selenium:selenium-java:4.16.1'
+
+	// webDriverManager
+	implementation 'io.github.bonigarcia:webdrivermanager:5.0.3'
+
+	// h2 DB
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	//
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.1'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
