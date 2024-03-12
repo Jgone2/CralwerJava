@@ -17,8 +17,6 @@ import java.util.Set;
 @Service
 public class Cralwer {
 
-    static final int SEQUENCE = 1;
-
     public static void main(String[] args) throws InterruptedException {
 
         // 크롤링할 사이트 주소
@@ -143,41 +141,52 @@ public class Cralwer {
     }
 
     // 다음 페이지로 이동
-    private static void clickNextPage(WebDriver driver, WebDriverWait wait)  {
+    private static void clickNextPage(WebDriver driver, WebDriverWait wait) {
         try {
             // "더보기" 버튼이나 페이지 버튼 찾기
-            List<WebElement> moreButtons = driver.findElements(By.id("info.search.place.more"));
+            WebElement moreButton = driver.findElement(By.id("info.search.place.more"));
             List<WebElement> nextButtons = driver.findElements(By.id("info.search.page.next"));
+            List<WebElement> pageButtons = driver.findElements(By.cssSelector("a[id^='info.search.page.no']"));
 
-            List<WebElement> pageButtons = getPageButtons(wait);
+            // 현재 페이지 번호 및 마지막 페이지 번호 계산
+            int currentPageNumber = getCurrentPageNumber(driver, pageButtons);
+            int lastPageNumber = pageButtons.size();
 
-            // "더보기" 버튼이나 페이지 버튼 클릭
-            JavascriptExecutor executor = (JavascriptExecutor) driver;
-            if (!moreButtons.isEmpty()) {
-                System.out.println("========= 더보기 버튼 클릭 ===============");
-                WebElement moreButton = moreButtons.get(0);
-                executor.executeScript("arguments[0].click();", moreButton);
-            } else if (!nextButtons.isEmpty()) {
-                System.out.println("========= 다음 페이지 버튼 클릭 ===============");
+            // 5페이지인 경우 다음 페이지 버튼 클릭
+            if (currentPageNumber == lastPageNumber) {
+                System.out.println("========= 다음 버튼 클릭 ===============");
                 WebElement nextButton = nextButtons.get(0);
+                JavascriptExecutor executor = (JavascriptExecutor) driver;
                 executor.executeScript("arguments[0].click();", nextButton);
+            } else if (currentPageNumber < lastPageNumber) {
+                // "더보기" 버튼 또는 페이지 버튼 클릭
+                JavascriptExecutor executor = (JavascriptExecutor) driver;
+                if (moreButton.isDisplayed()) {
+                    System.out.println("========= 더보기 버튼 클릭 ===============");
+                    executor.executeScript("arguments[0].click();", moreButton);
+                } else {
+                    System.out.println("========= 다음 페이지 버튼 클릭 ===============");
+                    WebElement nextButton = pageButtons.get(currentPageNumber);
+                    executor.executeScript("arguments[0].click();", nextButton);
+                }
             }
 
-            // 페이지 로딩 대기
-            Thread.sleep(2000); // 페이지 로딩 시간에 따라 조정이 필요합니다.
-
-            // 새로운 페이지의 웹 요소 로드 대기
+            // 페이지 로딩 완료 확인
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='info.search.place.list']//li")));
-        } catch (InterruptedException e) {
-            log.error("페이지 로딩 대기 중 오류가 발생했습니다.", e);
-        } catch (Exception e) {
+        }  catch (Exception e) {
             log.error("페이지 이동 중 오류가 발생했습니다.", e);
         }
     }
 
-    private static List<WebElement> getPageButtons(WebDriverWait wait) {
-        String xpathExpression = String.format("//div[@id='info.search.page']//div[@class='pageWrap']//a[@id='info.search.page.no%d']", SEQUENCE);
-        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(xpathExpression)));
+    private static int getCurrentPageNumber(WebDriver driver, List<WebElement> pageButtons) {
+        int currentPageNumber = 0;
+        for (int i = 0; i < pageButtons.size(); i++) {
+            if (pageButtons.get(i).getAttribute("class").equals("ACTIVE")) {
+                currentPageNumber = i + 1;
+                break;
+            }
+        }
+        return currentPageNumber;
     }
 
     private static String verifyExistingFile() {
