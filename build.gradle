@@ -28,7 +28,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	// selenium
-	implementation 'org.seleniumhq.selenium:selenium-java:4.16.1'
+	implementation 'org.seleniumhq.selenium:selenium-java:4.20.0'
 
 	// webDriverManager
 	implementation 'io.github.bonigarcia:webdrivermanager:5.0.3'
@@ -37,7 +37,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
-	//
+	// httpClient
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.1'
 }
 
