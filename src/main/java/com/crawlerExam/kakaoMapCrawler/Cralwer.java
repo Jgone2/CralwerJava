@@ -133,9 +133,16 @@ public class Cralwer {
     }
 
     private static void getAttr(WebDriverWait wait) {
+        // 음식점 명
+        WebElement placeName = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='mArticle']/div[1]/div[1]/div[2]/div/h2")));
+        WebElement placeCategory = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"mArticle\"]/div[1]/div[1]/div[2]/div/div[2]/span[1]")));
+
+
         WebElement locationDetail = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='mArticle']//div[@class='location_detail']//span[@class='txt_address']")));
         WebElement locationNum = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='mArticle']//div[@class='location_detail']//span[@class='txt_addrnum']")));
 
+        System.out.println(placeName.getText());
+        System.out.println(placeCategory.getText());
         System.out.println(locationDetail.getText());
         System.out.println(locationNum.getText());
     }
