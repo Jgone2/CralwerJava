@@ -20,7 +20,7 @@ public class ChromeDriverDownloader {
     public static void main(String[] args) throws IOException {
 
         // get the path of the chromedriver.exe
-        String url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/121.0.6167.85/mac-x64/chromedriver-mac-x64.zip";
+        String url = "https://storage.googleapis.com/chrome-for-testing-public/124.0.6367.91/mac-x64/chromedriver-mac-x64.zip";
         log.info("Download URL: {}", url);
         // Set the path to the chromedriver.exe
         String outputPath = "/Users/jgone2/Downloads/chromedriver-mac-x64.zip";
